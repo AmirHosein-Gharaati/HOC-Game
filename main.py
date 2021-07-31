@@ -3,8 +3,6 @@ from os import environ
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
 from pygame.locals import *
-import numpy
-import cv2
 
 class Color:
     BLACK = (0, 0, 0)
