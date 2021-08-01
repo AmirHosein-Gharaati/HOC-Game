@@ -2,10 +2,11 @@ import pygame
 from .color import Color
 
 class Button:
-    def __init__(self, sizes, color, name, font, screen):
+    def __init__(self, sizes, color, font, screen, text, name=None):
         self.sizes = sizes
         self.color = color
-        self.name = name
+        self.text = text
+        self.name = name or text
         self.font = font
         self.screen = screen
         

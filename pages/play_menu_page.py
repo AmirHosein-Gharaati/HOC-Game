@@ -4,7 +4,7 @@ from pygame.locals import QUIT
 from .components.button import Button
 from .components.color import Color
 
-class HelpPage:
+class PlayMenuPage:
     def __init__(self, screen):
         self.screen = screen
         self.initializeFonts()

@@ -12,27 +12,17 @@ class MainPage:
         self.initializeFonts()
         self.initializeButtons()
     
-    
     def initializeButtons(self):
-        gameButtonsName = ("Human vs Human", "Human vs Agent", "Agent vs Agent")
-        self.buttons = []
-        for buttonIndex, buttonName in enumerate(gameButtonsName):
-            gameButton = Button((321, buttonIndex*78+264, 380, 70),
-                                Color.GRAY,
-                                buttonName,
-                                self.Garamond45Font,
-                                self.screen)
-            self.buttons.append(gameButton)
-        
-        self.buttons.append(Button((530, 512, 112, 44), Color.RED, "Exit", self.Garamond30Font, self.screen))
-        self.buttons.append(Button((390, 512, 112, 44), Color.BLUE, "Help", self.Garamond30Font, self.screen))
+        self.buttons = [
+            Button((321, 320, 380, 70), Color.RED, self.Garamond45Font, self.screen, "Play"),
+            Button((321, 420, 380, 70), Color.BLUE, self.Garamond45Font, self.screen, "Help")
+        ]
     
     def initializeImages(self):
         self.mainBackgroundImage = pygame.image.load("images/MainBackground.png")
         self.card15Image = pygame.image.load("images/cards/15.png")
     
     def initializeFonts(self):
-        self.Garamond30Font = pygame.font.Font("fonts/EBGaramond-VariableFont_wght.ttf", 30)
         self.Garamond45Font = pygame.font.Font("fonts/EBGaramond-VariableFont_wght.ttf", 40)
         self.Algerian116Font = pygame.font.Font("fonts/Algerian Regular.ttf", 116)
 
