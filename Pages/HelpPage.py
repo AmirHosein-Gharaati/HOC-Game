@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import QUIT
 
 from .Components.Button import Button
-from .Components import Color
+from .Components.Color import Color
 
 class HelpPage:
     def __init__(self, screen):
@@ -11,15 +11,6 @@ class HelpPage:
         self.initializeImages()
         self.initializeButtons()
         
-    
-    def show(self):
-        self.screen.blit(self.mainBackgroundImage, (0, 0))
-        
-        self.screen.blit(self.Algerian116Font.render("FIFTEEN", 1, Color.BLACK), (290, 0))
-        
-        self.mainPageButton.show()
-        
-        pygame.display.flip()
     
     def initializeButtons(self):
         self.mainPageButton = Button((445, 512, 132, 44), Color.RED, "Main Page", self.Garamond30Font, self.screen)
@@ -30,6 +21,13 @@ class HelpPage:
     def initializeFonts(self):
         self.Garamond30Font = pygame.font.Font("fonts/EBGaramond-VariableFont_wght.ttf", 30)
         self.Algerian116Font = pygame.font.Font("fonts/Algerian Regular.ttf", 116)
+
+    def show(self):
+        self.screen.blit(self.mainBackgroundImage, (0, 0))
+        self.screen.blit(self.Algerian116Font.render("FIFTEEN", 1, Color.BLACK), (290, 0))
+        self.mainPageButton.show()
+        
+        pygame.display.flip()
     
     def run(self):
         while True:
