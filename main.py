@@ -4,8 +4,8 @@ environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
 from pygame.locals import *
 
-from Pages.HelpPage import HelpPage
-from Pages.MainPage import MainPage
+from pages.help_page import HelpPage
+from pages.main_page import MainPage
 
 
 class Game:

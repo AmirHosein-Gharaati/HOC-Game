@@ -2,8 +2,8 @@ import pygame
 
 from pygame.locals import QUIT
 
-from .Components.Button import Button
-from .Components.Color import Color
+from .components.button import Button
+from .components.color import Color
 
 class MainPage:
     def __init__(self, screen):
