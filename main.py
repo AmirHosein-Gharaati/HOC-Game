@@ -2,7 +2,6 @@ import sys
 from os import environ
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
-from pygame.locals import *
 
 from pages.help_page import HelpPage
 from pages.main_page import MainPage
@@ -17,21 +16,23 @@ class Game:
         self.mainPage = MainPage(self.screen)
         self.helpPage = HelpPage(self.screen)
         self.playMenuPage = PlayMenuPage(self.screen)
+
+        self.pageStatus = "Main"
         
     def run(self):
-        situation = "Main"
-        while situation != "Exit":
-            if situation == "Main":
+        while self.pageStatus != "Exit":
+            if self.pageStatus == "Main":
                 self.mainPage.show()
-                situation = self.mainPage.run()
+                self.pageStatus = self.mainPage.run()
             
-            elif situation == "Help":
+            elif self.pageStatus == "Help":
                 self.helpPage.show()
-                situation = self.helpPage.run()
+                self.pageStatus = self.helpPage.run()
             
-            elif situation == "Play":
+            elif self.pageStatus == "Play":
                 self.playMenuPage.show()
-                situation = self.playMenuPage.run()
+                self.pageStatus = self.playMenuPage.run()
+                self.pageStatus = "Main" # temp to program works
         
         pygame.quit()
 
