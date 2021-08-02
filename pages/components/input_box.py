@@ -1,4 +1,5 @@
 import pygame
+import clipboard
 from .color import Color
 
 
@@ -33,6 +34,10 @@ class InputBox:
         if self.defaultFont.render(self.text+character, True, Color.BLACK).get_rect().width + 5 < self.width and InputBox.isValidCharacter(character):
             self.text += character
 
+    def setText(self, string):
+        if self.defaultFont.render(string, True, Color.BLACK).get_rect().width < self.width and all(InputBox.isValidCharacter(character) for character in string):
+            self.text = string
+
     def removeLastOfText(self):
         self.text = self.text[:-1]
 
@@ -64,6 +69,16 @@ class InputBox:
             elif event.type == pygame.KEYDOWN and self.isActive():
                 if event.key == pygame.K_BACKSPACE:
                     self.removeLastOfText()
+                elif pygame.key.get_mods() & pygame.KMOD_CTRL:
+                    if event.key == pygame.K_v:
+                        self.setText(clipboard.paste())
+                    elif event.key == pygame.K_c:
+                        clipboard.copy(self.text)
+                    elif event.key == pygame.K_x:
+                        clipboard.copy(self.text)
+                        self.text = ""
+                elif event.key in (pygame.K_ESCAPE, pygame.K_DELETE):
+                    self.text = ""
                 else:
                     self.addText(event.unicode)
 

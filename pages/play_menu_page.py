@@ -14,8 +14,8 @@ class PlayMenuPage:
         self.initializeButtons()
         
     def initializeButtons(self):
-        self.mainPageButton = Button(self.screen, (370, 500, 142, 44), Color.RED, self.Garamond30Font, "Main Page", "Main")
-        self.startPageButton = Button(self.screen, (530, 500, 122, 44), Color.GREEN, self.Garamond30Font, "Start")
+        self.mainPageButton = Button(self.screen, (370, 500, 142, 44), Color.RED, Color.BLACK, self.Garamond30Font, "Main Page", "Main")
+        self.startPageButton = Button(self.screen, (530, 500, 122, 44), Color.GREEN, Color.BLACK, self.Garamond30Font, "Start")
 
         self.player1ModeButton = RadioButton(self.screen, ("Human", "Agent"), 300, 160)
         self.player2ModeButton = RadioButton(self.screen, ("Human", "Agent"), 690, 160, False)

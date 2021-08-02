@@ -14,8 +14,8 @@ class MainPage:
     
     def initializeButtons(self):
         self.buttons = [
-            Button(self.screen, (321, 320, 380, 70), Color.RED, self.Garamond45Font, "Play"),
-            Button(self.screen, (321, 420, 380, 70), Color.BLUE, self.Garamond45Font, "Help")
+            Button(self.screen, (321, 320, 380, 70), Color.RED, Color.WHITE, self.Garamond45Font, "Play"),
+            Button(self.screen, (321, 420, 380, 70), Color.BLUE, Color.WHITE, self.Garamond45Font, "Help")
         ]
     
     def initializeImages(self):

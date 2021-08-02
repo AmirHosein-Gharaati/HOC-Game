@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4570a803-2395-448a-ae07-d778211aa7fd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/play_page.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/HOC-Game.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/HOC-Game.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/button.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/color.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/color.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/radio_button.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/radio_button.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/input_box.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/input_box.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/help_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/help_page.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/main_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/main_page.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/play_menu_page.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/play_menu_page.py" afterDir="false" />
@@ -121,7 +117,8 @@
       <workItem from="1627862630205" duration="285000" />
       <workItem from="1627862969282" duration="134000" />
       <workItem from="1627863179208" duration="2988000" />
-      <workItem from="1627897306110" duration="7897000" />
+      <workItem from="1627897306110" duration="10569000" />
+      <workItem from="1627916816653" duration="59000" />
     </task>
     <servers />
   </component>
@@ -138,9 +135,10 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/HOC_Game$main.coverage" NAME="main Coverage Results" MODIFIED="1627912535172" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/HOC_Game$main.coverage" NAME="main Coverage Results" MODIFIED="1627916854601" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/HOC_Game$input_box.coverage" NAME="input_box Coverage Results" MODIFIED="1627906858293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pages/components" />
   </component>
 </project>

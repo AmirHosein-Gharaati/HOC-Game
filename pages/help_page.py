@@ -13,7 +13,7 @@ class HelpPage:
         
     
     def initializeButtons(self):
-        self.mainPageButton = Button(self.screen, (445, 512, 132, 44), Color.RED, self.Garamond30Font, "Main Page", "Main")
+        self.mainPageButton = Button(self.screen, (445, 512, 132, 44), Color.RED, Color.BLACK, self.Garamond30Font, "Main Page", "Main")
     
     def initializeImages(self):
         self.mainBackgroundImage = pygame.image.load("images/MainBackground.png")
