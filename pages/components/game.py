@@ -3,6 +3,7 @@ import pygame
 from .card import Card
 from .color import Color
 from .font import Font
+from .scroll_text_box import ScrollTextBox
 
 class Game:
     playerMaxTurn = 30
@@ -15,8 +16,15 @@ class Game:
         self.selectedCard = None
         self.turn = 0
         self.ended = False
+        self.isBothAgent = all(not player.isHuman() for player in self.players)
 
-        self.initializeImage()
+        if self.noHuman():
+            self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 20, 20)
+        else:
+            self.initializeImage()
+
+    def noHuman(self):
+        return self.isBothAgent
 
     def initializeImage(self):
         self.shieldsTurnImage = pygame.image.load("images/ShieldTurn.png")
@@ -25,7 +33,32 @@ class Game:
 
     def nextTurn(self):
         self.playedTurns[self.turn] += 1
-        self.turn = 1 - self.turn
+        self.turn ^= 1
+
+    def agentPlay(self):
+        selected, unselected = self.players[self.turn].mainFunction(*[[int(card) for card in self.getCardsOfPlayer(index)] for index in (self.turn, self.turn ^ 1, -1)])
+        if unselected:
+            self.cards[selected - 1].statusOnBoard, self.cards[unselected - 1].statusOnBoard = self.cards[unselected - 1].statusOnBoard, self.cards[selected - 1].statusOnBoard
+            logText = f"{self.players[self.turn].name} replaced card {selected} with {unselected}"
+        else:
+            self.cards[selected - 1].statusOnBoard = [self.turn + 1, len(self.getCardsOfPlayer(self.turn))]
+            logText = f"{self.players[self.turn].name} picked card {selected}"
+
+        if self.noHuman():
+            logText += f"  |  Cards: {' ,  '.join(map(lambda card: str(int(card)), self.getCardsOfPlayer(self.turn)))}"
+            logText += f"  |  Sum: {self.getSumCardsOfPlayer(self.turn)}"
+            logColor = "green" if self.turn % 2 else "orange"
+            self.textBox.add(logText, logColor)
+
+            winner = self.getWinner()
+            if winner:
+                self.ended = True
+                self.textBox.add(f"{winner.name} won", "blue")
+
+            elif sum(self.playedTurns) == Game.playerMaxTurn * 2:
+                self.ended = True
+                self.textBox.add("Tie", "blue")
+
 
     def getClickedCard(self, position):
         return next((card for card in self.cards if card.collidepoint(position)), None)
@@ -33,17 +66,23 @@ class Game:
     def getCardsOfPlayer(self, playerIndex):
         return [card for card in self.cards if card.statusOnBoard[0] - 1 == playerIndex]
 
+    def getSumCardsOfPlayer(self, playerIndex):
+        return sum(map(int, self.getCardsOfPlayer(playerIndex)))
+
     def isEnded(self):
         return self.ended
 
     def getWinner(self):
         for playerIndex in (0, 1):
-            turnPlayerCards = self.getCardsOfPlayer(playerIndex)
-            if len(turnPlayerCards) == 3 and sum(map(int, turnPlayerCards)) == 15:
+            if len(self.getCardsOfPlayer(playerIndex)) == 3 and self.getSumCardsOfPlayer(playerIndex) == 15:
                 return self.players[playerIndex]
         return None
 
     def show(self):
+        if self.noHuman():
+            self.textBox.show()
+            return
+
         winner = self.getWinner()
 
         for card in self.cards:
@@ -63,7 +102,7 @@ class Game:
 
             sumText = Font.make("GaramondBold", 20).render("Sum:", 1, Color.WHITE)
             self.screen.blit(sumText, sumText.get_rect(topleft=(self.shieldsImageStartX[playerIndex] + 54, 144)))
-            playerSumText = Font.make("GaramondBold", 30).render(str(sum(map(int, self.getCardsOfPlayer(playerIndex)))), 1, Color.WHITE)
+            playerSumText = Font.make("GaramondBold", 30).render(str(self.getSumCardsOfPlayer(playerIndex)), 1, Color.WHITE)
             self.screen.blit(playerSumText, playerSumText.get_rect(topleft=(self.shieldsImageStartX[playerIndex] + 106, 137)))
 
             trunReminingText = Font.make("GaramondBold", 17).render("Turns reamining:", 1, Color.WHITE)
@@ -73,7 +112,7 @@ class Game:
 
         if winner:
             self.ended = True
-            gameStatusText = f"{winner.name} wins"
+            gameStatusText = f"{winner.name} won"
         elif sum(self.playedTurns) == Game.playerMaxTurn * 2:
             self.ended = True
             gameStatusText = f"Tie"
@@ -84,8 +123,22 @@ class Game:
         textRect.midtop = (511, 540)
         self.screen.blit(text, textRect)
 
-
     def play(self, event):
+        if self.noHuman():
+            self.textBox.update(event)
+            return True
+
+        if self.game.isEnded():
+            return False
+
+        if self.players[self.turn].mode == "Agent":
+            self.agentPlay()
+            self.nextTurn()
+            return True
+
+        elif event.type != pygame.MOUSEBUTTONDOWN:
+            return False
+
         clickedCard = self.getClickedCard(event.pos)
         turnPlayerCards = self.getCardsOfPlayer(self.turn)
         if clickedCard:

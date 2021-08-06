@@ -59,8 +59,8 @@ class PlayMenuPage:
                         return self.mainPageButton.name, None
                     
                     if self.startPageButton.collidepoint(pygame.mouse.get_pos()):
-                        player1 = Player(self.player1NameBox.text, self.player1ModeButton.selected(), self.player1FilePathBox.text)
-                        player2 = Player(self.player2NameBox.text, self.player2ModeButton.selected(), self.player2FilePathBox.text)
+                        player1 = Player(self.player1NameBox.text, self.player1ModeButton.selected(), self.player1FilePathBox.text.rstrip(".py"))
+                        player2 = Player(self.player2NameBox.text, self.player2ModeButton.selected(), self.player2FilePathBox.text.rstrip(".py"))
                         return self.startPageButton.name, (player1, player2)
                     
                     elif self.player1ModeButton.collidepoint(pygame.mouse.get_pos()):
