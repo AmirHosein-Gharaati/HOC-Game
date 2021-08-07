@@ -16,8 +16,8 @@ class PlayPage:
         self.initializeImages()
         self.initializeButtons()
 
-    def newGame(self, players):
-        self.game = Game(self.screen, players)
+    def newGame(self, players, agentDelayTime=1.0):
+        self.game = Game(self.screen, players, agentDelayTime)
 
     def initializeImages(self):
         self.backgroundImage = pygame.image.load("images/GameBackground.png")
@@ -36,12 +36,10 @@ class PlayPage:
         pygame.display.flip()
 
     def logThread(self):
-        starttime = time.time()
         while not self.game.isEnded():
-            self.game.agentPlay()
-            self.game.nextTurn()
-            self.show()
-            time.sleep(1.0 - ((time.time() - starttime) % 1.0))
+            if self.game.agentPlay():
+                self.game.nextTurn()
+                self.show()
 
         self.game.textBox.add(" ", "lightgray")
         self.game.textBox.add(" Enter any key to back to the main menu ... ", "gray")

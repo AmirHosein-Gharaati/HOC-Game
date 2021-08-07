@@ -23,14 +23,14 @@ class PlayMenuPage:
         self.player1NameBox = InputBox(self.screen, 160, 300, 295, "Player1")
         self.player2NameBox = InputBox(self.screen, 565, 300, 295, "Player2")
 
-        self.player1FilePathBox = InputBox(self.screen, 160, 400, 295, "Player1Code.py")
+        self.player1FilePathBox = InputBox(self.screen, 160, 390, 295, "Player1Code.py", True)
         self.player1FilePathBox.setDisable()
-        self.player2FilePathBox = InputBox(self.screen, 565, 400, 295, "Player2Code.py")
+        self.player2FilePathBox = InputBox(self.screen, 565, 390, 295, "Player2Code.py", True)
         self.player2FilePathBox.setDisable()
 
     def initializeImages(self):
         self.mainBackgroundImage = pygame.image.load("images/MainBackground.png")
-    
+
     def show(self):
         self.screen.blit(self.mainBackgroundImage, (0, 0))
         self.screen.blit(Font.make("Algerian", 116).render("FIFTEEN", 1, Color.BLACK), (290, 0))
@@ -47,7 +47,7 @@ class PlayMenuPage:
         self.player2NameBox.show()
         
         pygame.display.flip()
-    
+
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -59,9 +59,12 @@ class PlayMenuPage:
                         return self.mainPageButton.name, None
                     
                     if self.startPageButton.collidepoint(pygame.mouse.get_pos()):
-                        player1 = Player(self.player1NameBox.text, self.player1ModeButton.selected(), self.player1FilePathBox.text.rstrip(".py"))
-                        player2 = Player(self.player2NameBox.text, self.player2ModeButton.selected(), self.player2FilePathBox.text.rstrip(".py"))
-                        return self.startPageButton.name, (player1, player2)
+                        player1FilePath = self.player1FilePathBox.getText().rstrip(".py")
+                        player2FilePath = self.player2FilePathBox.getText().rstrip(".py")
+                        if (self.player1ModeButton.selected() == "Human" or Player.isCodeFileValid(player1FilePath)) and (self.player2ModeButton.selected() == "Human" or Player.isCodeFileValid(player2FilePath)):
+                            player1 = Player(self.player1NameBox.text, self.player1ModeButton.selected(), player1FilePath)
+                            player2 = Player(self.player2NameBox.text, self.player2ModeButton.selected(), player2FilePath)
+                            return self.startPageButton.name, (player1, player2)
                     
                     elif self.player1ModeButton.collidepoint(pygame.mouse.get_pos()):
                         self.player1ModeButton.update(pygame.mouse.get_pos())

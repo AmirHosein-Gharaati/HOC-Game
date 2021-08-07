@@ -37,7 +37,7 @@ class Game:
                 self.pageStatus, players = self.playMenuPage.run()
 
             elif self.pageStatus == "Start":
-                self.playPage.newGame(players)
+                self.playPage.newGame(players, 1.0)
                 self.playPage.show()
                 self.pageStatus = self.playPage.run()
         

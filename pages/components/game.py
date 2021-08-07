@@ -1,5 +1,7 @@
 import pygame
 
+import time
+
 from .card import Card
 from .color import Color
 from .font import Font
@@ -8,7 +10,7 @@ from .scroll_text_box import ScrollTextBox
 class Game:
     playerMaxTurn = 30
 
-    def __init__(self, screen, players):
+    def __init__(self, screen, players, agentDelayTime):
         self.screen = screen
         self.players = players
         self.cards = [Card(screen, cardNumber) for cardNumber in range(1, 9)]
@@ -17,6 +19,7 @@ class Game:
         self.turn = 0
         self.ended = False
         self.isBothAgent = all(not player.isHuman() for player in self.players)
+        self.agentDelayTime = agentDelayTime
 
         if self.noHuman():
             self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 20, 20)
@@ -35,8 +38,28 @@ class Game:
         self.playedTurns[self.turn] += 1
         self.turn ^= 1
 
+    def isAgentResponseValid(self, response, gameCards):
+        if len(response) == 2:
+            selected, unselected = response
+            if type(selected) == int and ((len(gameCards[0]) == 3 and type(unselected) == int) or (len(gameCards[0]) < 3 and unselected == None)):
+                if selected in gameCards[2] and (gameCards[0] != 3 or unselected in gameCards[0]):
+                    return True
+        return False
+
     def agentPlay(self):
-        selected, unselected = self.players[self.turn].mainFunction(*[[int(card) for card in self.getCardsOfPlayer(index)] for index in (self.turn, self.turn ^ 1, -1)])
+        time.sleep(self.agentDelayTime)
+
+        gameCards = [[int(card) for card in self.getCardsOfPlayer(index)] for index in (self.turn, self.turn ^ 1, -1)]
+        agentResponse = self.players[self.turn].mainFunction(*gameCards)
+        if not self.isAgentResponseValid(agentResponse, gameCards):
+            if self.noHuman():
+                self.textBox.add(f"{self.players[self.turn].name}'s made a invalid move", "red")
+            self.playedTurns[self.turn] += 1
+            return False
+
+        else:
+            selected, unselected = agentResponse
+
         if unselected:
             self.cards[selected - 1].statusOnBoard, self.cards[unselected - 1].statusOnBoard = self.cards[unselected - 1].statusOnBoard, self.cards[selected - 1].statusOnBoard
             logText = f"{self.players[self.turn].name} replaced card {selected} with {unselected}"
@@ -59,6 +82,8 @@ class Game:
                 self.ended = True
                 self.textBox.add("Tie", "blue")
 
+        return True
+
 
     def getClickedCard(self, position):
         return next((card for card in self.cards if card.collidepoint(position)), None)
@@ -70,12 +95,16 @@ class Game:
         return sum(map(int, self.getCardsOfPlayer(playerIndex)))
 
     def isEnded(self):
+        if not self.ended and self.getWinner():
+            self.ended = True
         return self.ended
 
     def getWinner(self):
         for playerIndex in (0, 1):
             if len(self.getCardsOfPlayer(playerIndex)) == 3 and self.getSumCardsOfPlayer(playerIndex) == 15:
                 return self.players[playerIndex]
+            elif self.playedTurns[playerIndex] == Game.playerMaxTurn and self.playedTurns[playerIndex^1] + 2 < self.playedTurns[playerIndex]:
+                return self.players[playerIndex^1]
         return None
 
     def show(self):
@@ -132,8 +161,8 @@ class Game:
             return False
 
         if self.players[self.turn].mode == "Agent":
-            self.agentPlay()
-            self.nextTurn()
+            if self.agentPlay():
+                self.nextTurn()
             return True
 
         elif event.type != pygame.MOUSEBUTTONDOWN:
