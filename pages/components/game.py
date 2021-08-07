@@ -128,7 +128,7 @@ class Game:
             self.textBox.update(event)
             return True
 
-        if self.game.isEnded():
+        if self.isEnded():
             return False
 
         if self.players[self.turn].mode == "Agent":
