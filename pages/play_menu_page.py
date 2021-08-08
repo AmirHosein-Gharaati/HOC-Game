@@ -28,8 +28,8 @@ class PlayMenuPage:
         self.player1NameBox = InputBox(self.screen, 160, 300, 295, "Player1")
         self.player2NameBox = InputBox(self.screen, 565, 300, 295, "Player2")
 
-        self.player1FileOpenButton = Button(self.screen, (340, 390, 100, 50), "azure3", Color.BLACK, Font.make("Garamond", 30), "Open")
-        self.player2FileOpenButton = Button(self.screen, (580, 390, 100, 50), "azure3", Color.BLACK, Font.make("Garamond", 30), "Open")
+        self.player1FileOpenButton = Button(self.screen, (340, 390, 100, 50), "lightseagreen", Color.BLACK, Font.make("Garamond", 30), "Open", enable=False)
+        self.player2FileOpenButton = Button(self.screen, (580, 390, 100, 50), "lightseagreen", Color.BLACK, Font.make("Garamond", 30), "Open", enable=False)
 
     def initializeImages(self):
         self.mainBackgroundImage = pygame.image.load("images/MainBackground.png")
@@ -72,21 +72,31 @@ class PlayMenuPage:
                         return self.mainPageButton.name, None
                     
                     if self.startPageButton.collidepoint(pygame.mouse.get_pos()):
-                        if (self.player1ModeButton.selected() == "Human" or Player.isCodeFileValid(self.player1FilePath)) and (self.player2ModeButton.selected() == "Human" or Player.isCodeFileValid(self.player2FilePath)):
+                        if (self.player1FileOpenButton.isDisable() or Player.isCodeFileValid(self.player1FilePath)) and (self.player2FileOpenButton.isDisable() or Player.isCodeFileValid(self.player2FilePath)):
                             player1 = Player(self.player1NameBox.text, self.player1ModeButton.selected(), self.player1FilePath)
                             player2 = Player(self.player2NameBox.text, self.player2ModeButton.selected(), self.player2FilePath)
                             return self.startPageButton.name, (player1, player2)
                     
                     elif self.player1ModeButton.collidepoint(pygame.mouse.get_pos()):
                         self.player1ModeButton.update(pygame.mouse.get_pos())
+                        if self.player1ModeButton.selected() == "Human":
+                            self.player1FileOpenButton.setDisable()
+                        else:
+                            self.player1FileOpenButton.setEnable()
+                        self.player1FileOpenButton.show()
                     
                     elif self.player2ModeButton.collidepoint(pygame.mouse.get_pos()):
                         self.player2ModeButton.update(pygame.mouse.get_pos())
+                        if self.player2ModeButton.selected() == "Human":
+                            self.player2FileOpenButton.setDisable()
+                        else:
+                            self.player2FileOpenButton.setEnable()
+                        self.player2FileOpenButton.show()
 
-                    elif self.player1ModeButton.selected() == "Agent" and self.player1FileOpenButton.collidepoint(pygame.mouse.get_pos()):
+                    elif not self.player1FileOpenButton.isDisable() and self.player1FileOpenButton.collidepoint(pygame.mouse.get_pos()):
                         self.player1FilePath = self.prompt_file(1)
 
-                    elif self.player2ModeButton.selected() == "Agent" and self.player2FileOpenButton.collidepoint(pygame.mouse.get_pos()):
+                    elif not self.player2FileOpenButton.isDisable() and self.player2FileOpenButton.collidepoint(pygame.mouse.get_pos()):
                         self.player2FilePath = self.prompt_file(2)
 
                 self.player1NameBox.update(event)
