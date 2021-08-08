@@ -1,1 +1,2 @@
-pygame
+pygame==2.0.1
+clipboard==0.0.4
