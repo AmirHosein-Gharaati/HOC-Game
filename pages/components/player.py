@@ -1,10 +1,15 @@
+import importlib.util
+
 class Player:
     def __init__(self, name, mode, filePath=""):
         self.name = name
         self.mode = mode
         if self.mode == "Agent":
             self.filePath = filePath
-            self.mainFunction = __import__(self.filePath).main
+            spec = importlib.util.spec_from_file_location("module.name", self.filePath)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            self.mainFunction = module.main
 
     def isHuman(self):
         return self.mode == "Human"
@@ -12,7 +17,10 @@ class Player:
     @staticmethod
     def isCodeFileValid(filePath):
         try:
-            __import__(filePath).main([2, 5], [1, 8], [3, 4, 6, 7])
+            spec = importlib.util.spec_from_file_location("module.name", filePath)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            module.main([2, 5], [1, 8], [3, 4, 6, 7])
             return True
         except Exception as e:
             print(e)
