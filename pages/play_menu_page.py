@@ -10,7 +10,6 @@ from .components.radio_button import RadioButton
 from .components.color import Color
 from .components.input_box import InputBox
 from .components.font import Font
-from .components.switch_box import SwitchBox
 
 class PlayMenuPage:
     def __init__(self, screen):
@@ -24,10 +23,8 @@ class PlayMenuPage:
         self.mainPageButton = Button(self.screen, (370, 500, 142, 44), Color.RED, Color.BLACK, Font.make("Garamond", 30), "Main Page", "Main")
         self.startPageButton = Button(self.screen, (530, 500, 122, 44), Color.GREEN, Color.BLACK, Font.make("Garamond", 30), "Start")
 
-        self.player1ModeButton = RadioButton(self.screen, ("Human", "Agent"), 280, 160)
-        self.player2ModeButton = RadioButton(self.screen, ("Human", "Agent"), 710, 160, False)
-
-        self.agentVSagentPageMode = SwitchBox(self.screen, 480, 213, ("Board", "Console"), Font.make("Garamond", 25), Color.BLACK, 8)
+        self.player1ModeButton = RadioButton(self.screen, ("Human", "Agent"), 300, 160)
+        self.player2ModeButton = RadioButton(self.screen, ("Human", "Agent"), 690, 160, False)
 
         self.player1NameBox = InputBox(self.screen, 160, 300, 295, "Player1")
         self.player2NameBox = InputBox(self.screen, 565, 300, 295, "Player2")
@@ -71,9 +68,6 @@ class PlayMenuPage:
         if not self.player2FileOpenButton.isDisable():
             self.screen.blit(self.tickImage if self.player2FileIsValid else self.crossImage, (688, 408))
 
-        if not self.player1FileOpenButton.isDisable() and not self.player2FileOpenButton.isDisable():
-            self.agentVSagentPageMode.show()
-
         pygame.display.flip()
 
     def run(self):
@@ -93,7 +87,7 @@ class PlayMenuPage:
                         if (self.player1FileOpenButton.isDisable() or self.player1FileIsValid) and (self.player2FileOpenButton.isDisable() or self.player2FileIsValid):
                             player1 = Player(self.player1NameBox.text, self.player1ModeButton.selected(), self.player1FilePath)
                             player2 = Player(self.player2NameBox.text, self.player2ModeButton.selected(), self.player2FilePath)
-                            return self.startPageButton.name, ((player1, player2), self.agentVSagentPageMode.getSelected())
+                            return self.startPageButton.name, (player1, player2)
                     
                     elif self.player1ModeButton.collidepoint(pygame.mouse.get_pos()):
                         self.player1ModeButton.update(pygame.mouse.get_pos())
@@ -119,10 +113,6 @@ class PlayMenuPage:
                     elif not self.player2FileOpenButton.isDisable() and self.player2FileOpenButton.collidepoint(pygame.mouse.get_pos()):
                         self.player2FilePath = self.prompt_file(2)
                         self.player2FileIsValid = Player.isCodeFileValid(self.player2FilePath)
-                        self.show()
-
-                    if not self.player1FileOpenButton.isDisable() and not self.player2FileOpenButton.isDisable() and self.agentVSagentPageMode.collidepoint(pygame.mouse.get_pos()):
-                        self.agentVSagentPageMode.reverseSelected()
                         self.show()
 
                 self.player1NameBox.update(event)

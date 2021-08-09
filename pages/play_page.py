@@ -8,6 +8,7 @@ from .components.game import Game
 from .components.button import Button
 from .components.font import Font
 from .components.color import Color
+from .components.switch_box import SwitchBox
 
 class PlayPage:
     def __init__(self, screen):
@@ -16,8 +17,9 @@ class PlayPage:
         self.initializeImages()
         self.initializeButtons()
 
-    def newGame(self, players, agentVSagentPageMode):
-        self.game = Game(self.screen, players, agentVSagentPageMode, 1.0, 0)
+    def newGame(self, players):
+        self.agentVSagentPageModeButton = SwitchBox(self.screen, 480, 650, ("Board", "Console"), Font.make("Garamond", 25), Color.BLACK, 8)
+        self.game = Game(self.screen, players, 1.0, 0, self.agentVSagentPageModeButton.getSelected())
 
     def initializeImages(self):
         self.logBackgroundImage = pygame.image.load("images/backgrounds/LogsPageBackground.png")
@@ -39,6 +41,9 @@ class PlayPage:
         else:
             self.screen.blit(self.backgroundImage, (0, 0))
             self.game.show()
+
+        if self.game.noHuman():
+            self.agentVSagentPageModeButton.show()
 
         self.mainPageButton.show()
 
@@ -69,6 +74,11 @@ class PlayPage:
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.mainPageButton.collidepoint(pygame.mouse.get_pos()):
                     if self.game.noHuman(): self.threadContinue = False
                     return self.mainPageButton.name
-                    
+
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.game.noHuman() and self.agentVSagentPageModeButton.collidepoint(pygame.mouse.get_pos()):
+                    self.agentVSagentPageModeButton.reverseSelected()
+                    self.game.agentVSagentPageMode = self.agentVSagentPageModeButton.getSelected()
+                    self.show()
+
                 elif self.game.play(event):
                     self.show()

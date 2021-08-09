@@ -10,7 +10,7 @@ from .scroll_text_box import ScrollTextBox
 class Game:
     playerMaxTurn = 30
 
-    def __init__(self, screen, players, agentVSagentPageMode, agentDelayTime, startTurnIndex):
+    def __init__(self, screen, players, agentDelayTime, startTurnIndex, agentVSagentPageMode):
         self.screen = screen
         self.players = players
         self.cards = [Card(screen, cardNumber) for cardNumber in range(1, 9)]
