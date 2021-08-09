@@ -35,10 +35,11 @@ if __name__ == "__main__":
                 elif self.pageStatus == "Play":
                     self.playMenuPage.initializeButtons()
                     self.playMenuPage.show()
-                    self.pageStatus, players = self.playMenuPage.run()
+                    self.pageStatus, infos = self.playMenuPage.run()
 
                 elif self.pageStatus == "Start":
-                    self.playPage.newGame(players, 1.0)
+                    players, agentVSagentPageMode = infos
+                    self.playPage.newGame(players, agentVSagentPageMode)
                     self.playPage.show()
                     self.pageStatus = self.playPage.run()
 

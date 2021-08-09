@@ -26,16 +26,17 @@ class ScrollTextBox:
         self.intermediate = pygame.surface.Surface((self.width, self.height)).convert_alpha()
         self.intermediate.fill([0, 0, 0, 0])
         for lineIndex, line in enumerate(self.lines):
-            self.intermediate.blit(self.font.render(line["text"], True, line["color"]),
-                                   (self.startX, self.lineSpacing * lineIndex))
+            text = self.font.render(line["text"], True, line["color"])
+            self.intermediate.blit(text, text.get_rect(midtop=(511, self.lineSpacing * lineIndex)) if line["center"] else (self.startX, self.lineSpacing * lineIndex))
 
-    def add(self, text, color):
+    def add(self, text, color, center=False):
         lineY = self.lineSpacing * (len(self.lines))
         if lineY + self.lineSpacing > self.intermediate.get_height():
             self.increaseHeight()
 
-        self.intermediate.blit(self.font.render(text, True, color), (self.startX, lineY))
-        self.lines.append({"text": text, "color": color})
+        textRender = self.font.render(text, True, color)
+        self.intermediate.blit(textRender, textRender.get_rect(midtop=(511, lineY)) if center else (self.startX, lineY))
+        self.lines.append({"text": text, "color": color, "center": center})
 
         self.scrollY = self.getMaxHeight()
 

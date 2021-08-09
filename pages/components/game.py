@@ -10,21 +10,20 @@ from .scroll_text_box import ScrollTextBox
 class Game:
     playerMaxTurn = 30
 
-    def __init__(self, screen, players, agentDelayTime):
+    def __init__(self, screen, players, agentVSagentPageMode, agentDelayTime, startTurnIndex):
         self.screen = screen
         self.players = players
         self.cards = [Card(screen, cardNumber) for cardNumber in range(1, 9)]
         self.playedTurns = [0, 0]
         self.selectedCard = None
-        self.turn = 0
+        self.turn = int(startTurnIndex)
         self.ended = False
         self.isBothAgent = all(not player.isHuman() for player in self.players)
         self.agentDelayTime = agentDelayTime
+        self.agentVSagentPageMode = agentVSagentPageMode
 
-        if self.noHuman():
-            self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 106, 120)
-        else:
-            self.initializeImage()
+        self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 106, 120)
+        self.initializeImage()
 
     def noHuman(self):
         return self.isBothAgent
@@ -41,15 +40,15 @@ class Game:
     def isAgentResponseValid(self, response, gameCards):
         if len(response) == 2:
             selected, unselected = response
-            if type(selected) == int and ((len(gameCards[0]) == 3 and type(unselected) == int) or (len(gameCards[0]) < 3 and unselected == None)):
-                if selected in gameCards[2] and (gameCards[0] != 3 or unselected in gameCards[0]):
+            if selected in gameCards[2]:
+                if (len(gameCards[0]) == 3 and unselected in gameCards[0]) or (len(gameCards[0]) < 3 and unselected == 0):
                     return True
         return False
 
     def agentPlay(self):
         time.sleep(self.agentDelayTime)
 
-        gameCards = [[int(card) for card in self.getCardsOfPlayer(index)] for index in (self.turn, self.turn ^ 1, -1)]
+        gameCards = tuple([tuple([int(card) for card in self.getCardsOfPlayer(index)]) for index in (self.turn, self.turn ^ 1, -1)])
         agentResponse = self.players[self.turn].mainFunction(*gameCards)
         if not self.isAgentResponseValid(agentResponse, gameCards):
             if self.noHuman():
@@ -75,11 +74,11 @@ class Game:
             winner = self.getWinner()
             if winner:
                 self.ended = True
-                self.textBox.add(f"  $  {winner.name} won  $", Color.DEEPSKYBLUE2)
+                self.textBox.add(f"  $  {winner.name} won  $", Color.DEEPSKYBLUE2, center=True)
 
             elif sum(self.playedTurns) == Game.playerMaxTurn * 2:
                 self.ended = True
-                self.textBox.add("  $  Tie  $", Color.DEEPSKYBLUE2)
+                self.textBox.add("  $  Tie  $", Color.DEEPSKYBLUE2, center=True)
 
         return True
 
@@ -106,7 +105,7 @@ class Game:
         return None
 
     def show(self):
-        if self.noHuman():
+        if self.noHuman() and self.agentVSagentPageMode == "Console":
             self.textBox.show()
             return
 
