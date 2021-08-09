@@ -6,7 +6,7 @@ class Button:
     def __init__(self, screen, sizes, color, textColor, font, text, name=None, enable=True):
         self.sizes = sizes
         self.color = color
-        self.disableColor = "gray69"
+        self.disableColor = Color.GRAY69
         self.textColor = textColor
         self.text = text
         self.name = name or text

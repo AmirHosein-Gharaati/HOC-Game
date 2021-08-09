@@ -1,6 +1,7 @@
 import pygame
-from pygame import QUIT
+
 from .color import Color
+from .font import Font
 
 class RadioButton:
     class OptionButton:
@@ -55,7 +56,7 @@ class RadioButton:
         
     def initializeButtons(self, optionsName):
         self.optionsButton = []
-        Garamond30Font = pygame.font.Font("fonts/EBGaramond-VariableFont_wght.ttf", 30)
+        Garamond30Font = Font.make("Garamond", 30)
         
         for index, optionName in enumerate(optionsName):
             optionButton = RadioButton.OptionButton(self.screen, optionName, self.startX, self.startY+index*45, 15, Garamond30Font, self.checkBoxLeft)

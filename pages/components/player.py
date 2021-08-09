@@ -22,6 +22,5 @@ class Player:
             spec.loader.exec_module(module)
             module.main([2, 5], [1, 8], [3, 4, 6, 7])
             return True
-        except Exception as e:
-            print(e)
+        except:
             return False

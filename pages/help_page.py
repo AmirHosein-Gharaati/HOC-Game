@@ -16,7 +16,7 @@ class HelpPage:
         self.mainPageButton = Button(self.screen, (445, 512, 132, 44), Color.RED, Color.BLACK, Font.make("Garamond", 30), "Main Page", "Main")
     
     def initializeImages(self):
-        self.mainBackgroundImage = pygame.image.load("images/MainBackground.png")
+        self.mainBackgroundImage = pygame.image.load("images/backgrounds/MainBackground.png")
 
     def show(self):
         self.screen.blit(self.mainBackgroundImage, (0, 0))

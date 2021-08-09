@@ -20,7 +20,11 @@ class PlayPage:
         self.game = Game(self.screen, players, agentDelayTime)
 
     def initializeImages(self):
-        self.backgroundImage = pygame.image.load("images/GameBackground.png")
+        self.logBackgroundImage = pygame.image.load("images/backgrounds/LogsPageBackground.png")
+        self.logBackgroundUpImage = pygame.image.load("images/backgrounds/LogsPageBackgroundUp.png")
+        self.logBackgroundDownImage = pygame.image.load("images/backgrounds/LogsPageBackgroundDown.png")
+
+        self.backgroundImage = pygame.image.load("images/backgrounds/GameBackground.png")
 
     def initializeButtons(self):
         self.mainPageButton = Button(self.screen, [445, 7, 132, 44], Color.RED, Color.BLACK, Font.make("Garamond", 30), "Main Page", "Main")
@@ -29,27 +33,30 @@ class PlayPage:
         if not self.game.noHuman():
             self.screen.blit(self.backgroundImage, (0, 0))
             self.game.show()
-            self.mainPageButton.show()
+
         else:
+            self.screen.blit(self.logBackgroundImage, (0, 0))
             self.game.show()
+            self.screen.blit(self.logBackgroundUpImage, (0, 0))
+            self.screen.blit(self.logBackgroundDownImage, (0, 600))
+
+        self.mainPageButton.show()
 
         pygame.display.flip()
 
     def logThread(self):
-        while not self.game.isEnded():
-            if self.game.agentPlay():
-                self.game.nextTurn()
-                self.show()
+        self.threadContinue = True
 
-        self.game.textBox.add(" ", "lightgray")
-        self.game.textBox.add(" Enter any key to back to the main menu ... ", "gray")
-        self.show()
+        while not self.game.isEnded():
+            self.game.agentPlay()
+            self.game.nextTurn()
+            if not self.threadContinue: break
+            self.show()
 
     def run(self):
         if self.game.noHuman():
-            self.game.textBox.add("  --- game started ---   ", "blue")
+            self.game.textBox.add("  $  Game Started  $", Color.DEEPSKYBLUE2)
             self.show()
-            time.sleep(1.0)
             t = Thread(target=self.logThread)
             t.daemon = True
             t.start()
@@ -59,10 +66,8 @@ class PlayPage:
                 if event.type == QUIT:
                     return "Exit"
 
-                elif not self.game.noHuman() and event.type == pygame.MOUSEBUTTONDOWN and self.mainPageButton.collidepoint(pygame.mouse.get_pos()):
-                    return self.mainPageButton.name
-
-                elif self.game.noHuman() and self.game.isEnded() and event.type == pygame.KEYDOWN:
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.mainPageButton.collidepoint(pygame.mouse.get_pos()):
+                    if self.game.noHuman(): self.threadContinue = False
                     return self.mainPageButton.name
                     
                 elif self.game.play(event):

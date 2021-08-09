@@ -19,7 +19,7 @@ class MainPage:
         ]
     
     def initializeImages(self):
-        self.mainBackgroundImage = pygame.image.load("images/MainBackground.png")
+        self.mainBackgroundImage = pygame.image.load("images/backgrounds/MainBackground.png")
         self.card15Image = pygame.image.load("images/cards/15.png")
     
     def show(self):

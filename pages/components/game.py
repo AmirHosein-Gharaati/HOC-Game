@@ -22,7 +22,7 @@ class Game:
         self.agentDelayTime = agentDelayTime
 
         if self.noHuman():
-            self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 20, 20)
+            self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 106, 120)
         else:
             self.initializeImage()
 
@@ -53,8 +53,7 @@ class Game:
         agentResponse = self.players[self.turn].mainFunction(*gameCards)
         if not self.isAgentResponseValid(agentResponse, gameCards):
             if self.noHuman():
-                self.textBox.add(f"{self.players[self.turn].name}'s made a invalid move", "red")
-            self.playedTurns[self.turn] += 1
+                self.textBox.add(f"{self.players[self.turn].name}'s made a invalid move", Color.RED2)
             return False
 
         else:
@@ -70,20 +69,19 @@ class Game:
         if self.noHuman():
             logText += f"  |  Cards: {' ,  '.join(map(lambda card: str(int(card)), self.getCardsOfPlayer(self.turn)))}"
             logText += f"  |  Sum: {self.getSumCardsOfPlayer(self.turn)}"
-            logColor = "green" if self.turn % 2 else "orange"
+            logColor = Color.GREEN2 if self.turn % 2 else Color.ORANGE
             self.textBox.add(logText, logColor)
 
             winner = self.getWinner()
             if winner:
                 self.ended = True
-                self.textBox.add(f"{winner.name} won", "blue")
+                self.textBox.add(f"  $  {winner.name} won  $", Color.DEEPSKYBLUE2)
 
             elif sum(self.playedTurns) == Game.playerMaxTurn * 2:
                 self.ended = True
-                self.textBox.add("Tie", "blue")
+                self.textBox.add("  $  Tie  $", Color.DEEPSKYBLUE2)
 
         return True
-
 
     def getClickedCard(self, position):
         return next((card for card in self.cards if card.collidepoint(position)), None)
@@ -147,7 +145,7 @@ class Game:
             gameStatusText = f"Tie"
         else:
             gameStatusText = f"{self.players[self.turn].name}'s turn"
-        text = Font.make("GaramondBold", 30).render(gameStatusText, 1, Color.ORANGE)
+        text = Font.make("GaramondBold", 30).render(gameStatusText, 1, Color.ORANGE2)
         textRect = text.get_rect()
         textRect.midtop = (511, 540)
         self.screen.blit(text, textRect)
