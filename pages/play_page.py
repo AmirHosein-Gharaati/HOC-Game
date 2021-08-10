@@ -30,6 +30,7 @@ class PlayPage:
 
     def initializeButtons(self):
         self.mainPageButton = Button(self.screen, [445, 7, 132, 44], Color.RED, Color.BLACK, Font.make("Garamond", 30), "Main Page", "Main")
+        self.rematchPageButton = Button(self.screen, [519, 7, 132, 44], Color.RED, Color.BLACK, Font.make("Garamond", 30), "Rematch", "Start")
 
     def show(self):
         if self.game.noHuman() and self.game.agentVSagentPageMode == "Console":
@@ -37,7 +38,6 @@ class PlayPage:
             self.game.show()
             self.screen.blit(self.logBackgroundUpImage, (0, 0))
             self.screen.blit(self.logBackgroundDownImage, (0, 600))
-
         else:
             self.screen.blit(self.backgroundImage, (0, 0))
             self.game.show()
@@ -45,7 +45,11 @@ class PlayPage:
         if self.game.noHuman():
             self.agentVSagentPageModeButton.show()
 
-        self.mainPageButton.show()
+        if self.game.isEnded():
+            self.mainPageButton.show(371)
+            self.rematchPageButton.show()
+        else:
+            self.mainPageButton.show()
 
         pygame.display.flip()
 
@@ -69,11 +73,11 @@ class PlayPage:
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    return "Exit"
+                    return "Exit", None
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.mainPageButton.collidepoint(pygame.mouse.get_pos()):
                     if self.game.noHuman(): self.threadContinue = False
-                    return self.mainPageButton.name
+                    return self.mainPageButton.name, None
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.game.noHuman() and self.agentVSagentPageModeButton.collidepoint(pygame.mouse.get_pos()):
                     self.agentVSagentPageModeButton.reverseSelected()
@@ -82,3 +86,8 @@ class PlayPage:
 
                 elif self.game.play(event):
                     self.show()
+
+                if self.game.isEnded() and event.type == pygame.MOUSEBUTTONDOWN and self.rematchPageButton.collidepoint(pygame.mouse.get_pos()):
+                    return "Start", self.game.players
+
+

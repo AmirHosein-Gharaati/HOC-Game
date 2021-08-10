@@ -39,7 +39,7 @@ if __name__ == "__main__":
                 elif self.pageStatus == "Start":
                     self.playPage.newGame(players)
                     self.playPage.show()
-                    self.pageStatus = self.playPage.run()
+                    self.pageStatus, players = self.playPage.run()
 
             pygame.quit()
 

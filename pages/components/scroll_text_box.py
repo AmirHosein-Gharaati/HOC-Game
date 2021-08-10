@@ -46,10 +46,10 @@ class ScrollTextBox:
     def show(self):
         self.screen.blit(self.intermediate, (0, self.startY + self.scrollY))
 
-        pygame.draw.rect(self.screen, "snow3", (905, 110, 20, self.shownHeight), border_radius=3)
+        pygame.draw.rect(self.screen, Color.snow3, (905, 110, 20, self.shownHeight), border_radius=3)
         innerRectOfScrollSizes = (907, 112 + ((self.shownHeight - 4) / max(self.height, self.shownHeight)) * abs(self.scrollY),
                                   16, ((self.shownHeight - 4) / max(self.height, self.shownHeight)) * self.shownHeight)
-        pygame.draw.rect(self.screen, "mediumvioletred", innerRectOfScrollSizes, border_radius=3)
+        pygame.draw.rect(self.screen, Color.RED, innerRectOfScrollSizes, border_radius=3)
 
     def update(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button in (4, 5):
