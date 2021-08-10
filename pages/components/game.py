@@ -15,6 +15,7 @@ class Game:
         self.players = players
         self.cards = [Card(screen, cardNumber) for cardNumber in range(1, 9)]
         self.playedTurns = [0, 0]
+        self.agentPlayedInvalid = [False, False]
         self.selectedCard = None
         self.turn = int(startTurnIndex)
         self.ended = False
@@ -51,10 +52,13 @@ class Game:
         gameCards = tuple([tuple([int(card) for card in self.getCardsOfPlayer(index)]) for index in (self.turn, self.turn ^ 1, -1)])
         agentResponse = self.players[self.turn].mainFunction(*gameCards)
         if not self.isAgentResponseValid(agentResponse, gameCards):
+            self.agentPlayedInvalid[self.turn] = True
             if self.noHuman():
-                self.textBox.add(f"{self.players[self.turn].name}'s made a invalid move", Color.RED2)
-            return False
-
+                self.textBox.add(f"{self.players[self.turn].name} made an invalid move", Color.RED2)
+                winner = self.getWinner()
+                self.ended = True
+                self.textBox.add(f"  $  {winner.name} won  $", Color.DEEPSKYBLUE2, center=True)
+            return
         else:
             selected, unselected = agentResponse
 
@@ -80,8 +84,6 @@ class Game:
                 self.ended = True
                 self.textBox.add("  $  Tie  $", Color.DEEPSKYBLUE2, center=True)
 
-        return True
-
     def getClickedCard(self, position):
         return next((card for card in self.cards if card.collidepoint(position)), None)
 
@@ -100,7 +102,7 @@ class Game:
         for playerIndex in (0, 1):
             if len(self.getCardsOfPlayer(playerIndex)) == 3 and self.getSumCardsOfPlayer(playerIndex) == 15:
                 return self.players[playerIndex]
-            elif self.playedTurns[playerIndex] == Game.playerMaxTurn and self.playedTurns[playerIndex^1] + 2 < self.playedTurns[playerIndex]:
+            elif self.agentPlayedInvalid[playerIndex]:
                 return self.players[playerIndex^1]
         return None
 

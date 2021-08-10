@@ -89,5 +89,3 @@ class PlayPage:
 
                 if self.game.isEnded() and event.type == pygame.MOUSEBUTTONDOWN and self.rematchPageButton.collidepoint(pygame.mouse.get_pos()):
                     return "Start", self.game.players
-
-
