@@ -33,7 +33,6 @@ if __name__ == "__main__":
                     self.pageStatus = self.helpPage.run()
 
                 elif self.pageStatus == "Play":
-                    self.playMenuPage.initializeButtons()
                     self.playMenuPage.show()
                     self.pageStatus, players = self.playMenuPage.run()
 

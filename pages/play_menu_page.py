@@ -18,6 +18,7 @@ class PlayMenuPage:
 
         self.player1FilePath = self.player2FilePath = ""
         self.player1FileIsValid = self.player2FileIsValid = False
+        self.initializeButtons()
         
     def initializeButtons(self):
         self.mainPageButton = Button(self.screen, (370, 500, 142, 44), Color.RED, Color.BLACK, Font.make("Garamond", 30), "Main Page", "Main")
@@ -40,9 +41,13 @@ class PlayMenuPage:
     def prompt_file(self, playerIndex):
         top = tkinter.Tk()
         top.withdraw()
-        file_name = tkinter.filedialog.askopenfilename(parent=top, title=f"Player {playerIndex} File", filetypes=[("Python files", "*.py")])
+        filePath = tkinter.filedialog.askopenfilename(parent=top, title=f"Player {playerIndex} File", filetypes=[("Python files", "*.py")])
         top.destroy()
-        return file_name
+        return filePath
+
+    def extractFileName(self, filePath: str):
+        fileName = filePath[filePath.rfind("/")+1:].rstrip(".py")
+        return fileName
 
     def show(self):
         self.screen.blit(self.mainBackgroundImage, (0, 0))
@@ -64,16 +69,27 @@ class PlayMenuPage:
 
         if not self.player1FileOpenButton.isDisable():
             self.screen.blit(self.tickImage if self.player1FileIsValid else self.crossImage, (298, 408))
+            fileName = self.extractFileName(self.player1FilePath)
+            text = Font.make("Garamond", 20).render(fileName, 1, Color.BLACK)
+            if text.get_width() > 132:
+                while text.get_width() > 132:
+                    fileName = fileName[:-1]
+                    text = Font.make("Garamond", 20).render(fileName + "...", 1, Color.BLACK)
+            self.screen.blit(text, text.get_rect(topright=(293, 410)))
 
         if not self.player2FileOpenButton.isDisable():
             self.screen.blit(self.tickImage if self.player2FileIsValid else self.crossImage, (688, 408))
+            fileName = self.extractFileName(self.player2FilePath)
+            text = Font.make("Garamond", 20).render(fileName, 1, Color.BLACK)
+            if text.get_width() > 132:
+                while text.get_width() > 132:
+                    fileName = fileName[:-1]
+                    text = Font.make("Garamond", 20).render(fileName + "...", 1, Color.BLACK)
+            self.screen.blit(text, text.get_rect(topleft=(730, 410)))
 
         pygame.display.flip()
 
     def run(self):
-        self.player1FilePath = self.player2FilePath = ""
-        self.player1FileIsValid = self.player2FileIsValid = False
-
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -117,3 +133,6 @@ class PlayMenuPage:
 
                 self.player1NameBox.update(event)
                 self.player2NameBox.update(event)
+
+            self.player1NameBox.show()
+            self.player2NameBox.show()

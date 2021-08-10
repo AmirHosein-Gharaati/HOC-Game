@@ -1,8 +1,9 @@
 import pygame
 
+from .color import Color
 
 class ScrollTextBox:
-    def __init__(self, screen, font, startX, startY):
+    def __init__(self, screen, font, startX, startY, shownHeight):
         self.screen = screen
         self.width = self.screen.get_width()
         self.height = 0
@@ -17,6 +18,8 @@ class ScrollTextBox:
 
         self.intermediate = pygame.surface.Surface((self.width, self.height)).convert_alpha()
         self.intermediate.fill([0, 0, 0, 0])
+
+        self.shownHeight = shownHeight
 
     def getMaxHeight(self):
         return min(480 - self.height, 0)
@@ -42,6 +45,11 @@ class ScrollTextBox:
 
     def show(self):
         self.screen.blit(self.intermediate, (0, self.startY + self.scrollY))
+
+        pygame.draw.rect(self.screen, "snow3", (905, 110, 20, self.shownHeight), border_radius=3)
+        innerRectOfScrollSizes = (907, 112 + ((self.shownHeight - 4) / max(self.height, self.shownHeight)) * abs(self.scrollY),
+                                  16, ((self.shownHeight - 4) / max(self.height, self.shownHeight)) * self.shownHeight)
+        pygame.draw.rect(self.screen, "mediumvioletred", innerRectOfScrollSizes, border_radius=3)
 
     def update(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button in (4, 5):

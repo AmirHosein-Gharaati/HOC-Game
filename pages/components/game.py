@@ -22,7 +22,7 @@ class Game:
         self.agentDelayTime = agentDelayTime
         self.agentVSagentPageMode = agentVSagentPageMode
 
-        self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 106, 120)
+        self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 106, 120, 480)
         self.initializeImage()
 
     def noHuman(self):
