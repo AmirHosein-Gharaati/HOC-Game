@@ -160,8 +160,8 @@ class Game:
             return False
 
         if self.players[self.turn].mode == "Agent":
-            if self.agentPlay():
-                self.nextTurn()
+            self.agentPlay()
+            self.nextTurn()
             return True
 
         elif event.type != pygame.MOUSEBUTTONDOWN:
