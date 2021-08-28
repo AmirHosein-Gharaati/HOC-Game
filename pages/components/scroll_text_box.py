@@ -46,7 +46,7 @@ class ScrollTextBox:
     def show(self):
         self.screen.blit(self.intermediate, (0, self.startY + self.scrollY))
 
-        pygame.draw.rect(self.screen, Color.snow3, (905, 110, 20, self.shownHeight), border_radius=3)
+        pygame.draw.rect(self.screen, Color.SNOW3, (905, 110, 20, self.shownHeight), border_radius=3)
         innerRectOfScrollSizes = (907, 112 + ((self.shownHeight - 4) / max(self.height, self.shownHeight)) * abs(self.scrollY),
                                   16, ((self.shownHeight - 4) / max(self.height, self.shownHeight)) * self.shownHeight)
         pygame.draw.rect(self.screen, Color.RED, innerRectOfScrollSizes, border_radius=3)
@@ -63,7 +63,7 @@ class ScrollTextBox:
                 self.scrollY = self.getMaxHeight()
             elif event.key == pygame.K_HOME:
                 self.scrollY = 0
-            elif event.key == pygame.K_DOWN:
-                self.scrollY = min(self.scrollY + 15, 0)
             elif event.key == pygame.K_UP:
+                self.scrollY = min(self.scrollY + 15, 0)
+            elif event.key == pygame.K_DOWN:
                 self.scrollY = max(self.scrollY - 15, self.getMaxHeight())

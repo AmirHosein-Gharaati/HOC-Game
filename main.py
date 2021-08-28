@@ -34,12 +34,12 @@ if __name__ == "__main__":
 
                 elif self.pageStatus == "Play":
                     self.playMenuPage.show()
-                    self.pageStatus, players = self.playMenuPage.run()
+                    self.pageStatus, players, other = self.playMenuPage.run()
 
                 elif self.pageStatus == "Start":
-                    self.playPage.newGame(players)
-                    self.playPage.show()
-                    self.pageStatus, players = self.playPage.run()
+                    self.playPage.newGame(players, other)
+                    if not other[0]: self.playPage.show()
+                    self.pageStatus, players, other = self.playPage.run()
 
             pygame.quit()
 

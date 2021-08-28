@@ -9,6 +9,8 @@ from .components.button import Button
 from .components.radio_button import RadioButton
 from .components.color import Color
 from .components.input_box import InputBox
+from .components.number_input_box import NumberInputBox
+from .components.switch_box import SwitchBox
 from .components.font import Font
 
 class PlayMenuPage:
@@ -21,8 +23,8 @@ class PlayMenuPage:
         self.initializeButtons()
         
     def initializeButtons(self):
-        self.mainPageButton = Button(self.screen, (370, 500, 142, 44), Color.RED, Color.BLACK, Font.make("Garamond", 30), "Main Page", "Main")
-        self.startPageButton = Button(self.screen, (530, 500, 122, 44), Color.GREEN, Color.BLACK, Font.make("Garamond", 30), "Start")
+        self.mainPageButton = Button(self.screen, (370, 625, 142, 44), Color.RED, Color.BLACK, Font.make("Garamond", 30), "Main Page", "Main")
+        self.startPageButton = Button(self.screen, (530, 625, 122, 44), Color.GREEN, Color.BLACK, Font.make("Garamond", 30), "Start")
 
         self.player1ModeButton = RadioButton(self.screen, ("Human", "Agent"), 300, 160)
         self.player2ModeButton = RadioButton(self.screen, ("Human", "Agent"), 690, 160, False)
@@ -33,10 +35,16 @@ class PlayMenuPage:
         self.player1FileOpenButton = Button(self.screen, (340, 390, 100, 50), Color.ORANGE, Color.BLACK, Font.make("Garamond", 30), "Open", enable=False)
         self.player2FileOpenButton = Button(self.screen, (580, 390, 100, 50), Color.ORANGE, Color.BLACK, Font.make("Garamond", 30), "Open", enable=False)
 
+        self.agentVsAgentModeButton = SwitchBox(self.screen, 360, 500, ("Show Game", "Just Results"), Font.make("Garamond", 25), Color.BLACK, 8)
+        self.numberOfRoundsBox = NumberInputBox(self.screen, (630, 510), 1, (1, 10), enable=False)
+
     def initializeImages(self):
         self.mainBackgroundImage = pygame.image.load("images/backgrounds/MainBackground.png")
         self.tickImage = pygame.image.load("images/tick.png")
         self.crossImage = pygame.image.load("images/cross.png")
+
+    def isBothAgent(self):
+        return self.player1ModeButton.selected() == "Agent" and self.player2ModeButton.selected() == "Agent"
 
     def prompt_file(self, playerIndex):
         top = tkinter.Tk()
@@ -67,6 +75,11 @@ class PlayMenuPage:
         self.player1FileOpenButton.show()
         self.player2FileOpenButton.show()
 
+        if self.isBothAgent():
+            self.screen.blit(Font.make("Garamond", 20).render("Number of Rounds", 1, Color.BLACK), (580, 480))
+            self.agentVsAgentModeButton.show()
+            self.numberOfRoundsBox.show()
+
         if not self.player1FileOpenButton.isDisable():
             self.screen.blit(self.tickImage if self.player1FileIsValid else self.crossImage, (298, 408))
             fileName = self.extractFileName(self.player1FilePath)
@@ -93,44 +106,62 @@ class PlayMenuPage:
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    return "Exit", None
+                    return "Exit", None, None
                 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if self.mainPageButton.collidepoint(pygame.mouse.get_pos()):
-                        return self.mainPageButton.name, None
+                        return self.mainPageButton.name, None, None
                     
                     elif self.startPageButton.collidepoint(pygame.mouse.get_pos()):
                         if (self.player1FileOpenButton.isDisable() or self.player1FileIsValid) and (self.player2FileOpenButton.isDisable() or self.player2FileIsValid):
                             player1 = Player(self.player1NameBox.text, self.player1ModeButton.selected(), self.player1FilePath)
                             player2 = Player(self.player2NameBox.text, self.player2ModeButton.selected(), self.player2FilePath)
-                            return self.startPageButton.name, (player1, player2)
+                            justResult = self.isBothAgent() and self.agentVsAgentModeButton.getSelected() == "Just Results"
+                            return self.startPageButton.name, (player1, player2), (justResult, self.numberOfRoundsBox.number if justResult else 0)
                     
                     elif self.player1ModeButton.collidepoint(pygame.mouse.get_pos()):
+                        before = self.player1ModeButton.selected()
+
                         self.player1ModeButton.update(pygame.mouse.get_pos())
                         if self.player1ModeButton.selected() == "Human":
                             self.player1FileOpenButton.setDisable()
                         else:
                             self.player1FileOpenButton.setEnable()
-                        self.show()
+
+                        if before != self.player1ModeButton.selected():
+                            self.show()
                     
                     elif self.player2ModeButton.collidepoint(pygame.mouse.get_pos()):
+                        before = self.player2ModeButton.selected()
+
                         self.player2ModeButton.update(pygame.mouse.get_pos())
                         if self.player2ModeButton.selected() == "Human":
                             self.player2FileOpenButton.setDisable()
                         else:
                             self.player2FileOpenButton.setEnable()
-                        self.show()
 
-                    elif not self.player1FileOpenButton.isDisable() and self.player1FileOpenButton.collidepoint(pygame.mouse.get_pos()):
+                        if before != self.player2ModeButton.selected():
+                            self.show()
+
+                    elif self.player1FileOpenButton.isEnable() and self.player1FileOpenButton.collidepoint(pygame.mouse.get_pos()):
                         self.player1FilePath = self.prompt_file(1)
                         self.player1FileIsValid = Player.isCodeFileValid(self.player1FilePath)
                         self.show()
 
-                    elif not self.player2FileOpenButton.isDisable() and self.player2FileOpenButton.collidepoint(pygame.mouse.get_pos()):
+                    elif self.player2FileOpenButton.isEnable() and self.player2FileOpenButton.collidepoint(pygame.mouse.get_pos()):
                         self.player2FilePath = self.prompt_file(2)
                         self.player2FileIsValid = Player.isCodeFileValid(self.player2FilePath)
                         self.show()
 
+                    elif self.isBothAgent() and self.agentVsAgentModeButton.collidepoint(pygame.mouse.get_pos()):
+                        self.agentVsAgentModeButton.reverseSelected()
+                        if self.agentVsAgentModeButton.getSelected() == "Just Results":
+                            self.numberOfRoundsBox.setEnable()
+                        else:
+                            self.numberOfRoundsBox.setDisable()
+                        self.show()
+
+                self.numberOfRoundsBox.update(event)
                 self.player1NameBox.update(event)
                 self.player2NameBox.update(event)
 

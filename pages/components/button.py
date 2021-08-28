@@ -16,6 +16,7 @@ class Button:
         self.enable = enable
 
     def isDisable(self):    return not self.enable
+    def isEnable(self):     return self.enable
     def setEnable(self):    self.enable = True
     def setDisable(self):   self.enable = False
 

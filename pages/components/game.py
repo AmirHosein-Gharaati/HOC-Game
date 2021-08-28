@@ -17,7 +17,7 @@ class Game:
         self.playedTurns = [0, 0]
         self.agentPlayedInvalid = [False, False]
         self.selectedCard = None
-        self.turn = int(startTurnIndex)
+        self.turn = self.startTurnIndex = int(startTurnIndex)
         self.ended = False
         self.isBothAgent = all(not player.isHuman() for player in self.players)
         self.agentDelayTime = agentDelayTime
@@ -25,6 +25,14 @@ class Game:
 
         self.textBox = ScrollTextBox(self.screen, Font.make("Garamond", 30), 106, 120, 480)
         self.initializeImage()
+
+    def reset(self):
+        self.cards = [Card(self.screen, cardNumber) for cardNumber in range(1, 9)]
+        self.playedTurns = [0, 0]
+        self.agentPlayedInvalid = [False, False]
+        self.selectedCard = None
+        self.turn = self.startTurnIndex = 1 ^ self.startTurnIndex
+        self.ended = False
 
     def noHuman(self):
         return self.isBothAgent

@@ -11,5 +11,7 @@ class Color:
     RED2 = "red"
     ORANGE = "orange"
     GRAY69 = "gray69"
+    GRAY52 = "gray52"
     DEEPSKYBLUE2 = "deepskyblue2"
-    snow3 = "snow3"
+    SNOW3 = "snow3"
+    ORCHID3 = "orchid3"
