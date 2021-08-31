@@ -1,8 +1,7 @@
 import pygame
 from pygame.locals import QUIT
 
-import tkinter
-import tkinter.filedialog
+import os.path
 
 from .components.player import Player
 from .components.button import Button
@@ -32,8 +31,8 @@ class PlayMenuPage:
         self.player1NameBox = InputBox(self.screen, 160, 300, 295, "Player1")
         self.player2NameBox = InputBox(self.screen, 565, 300, 295, "Player2")
 
-        self.player1FileOpenButton = Button(self.screen, (340, 390, 100, 50), Color.ORANGE, Color.BLACK, Font.make("Garamond", 30), "Open", enable=False)
-        self.player2FileOpenButton = Button(self.screen, (580, 390, 100, 50), Color.ORANGE, Color.BLACK, Font.make("Garamond", 30), "Open", enable=False)
+        self.player1FileOpenButton = Button(self.screen, (340, 390, 100, 50), Color.ORANGE, Color.BLACK, Font.make("Garamond", 30), "Drop", enable=False)
+        self.player2FileOpenButton = Button(self.screen, (580, 390, 100, 50), Color.ORANGE, Color.BLACK, Font.make("Garamond", 30), "Drop", enable=False)
 
         self.agentVsAgentModeButton = SwitchBox(self.screen, 360, 500, ("Show Game", "Just Results"), Font.make("Garamond", 25), Color.BLACK, 8)
         self.numberOfRoundsBox = NumberInputBox(self.screen, (630, 510), 1, (1, 10), enable=False)
@@ -45,13 +44,6 @@ class PlayMenuPage:
 
     def isBothAgent(self):
         return self.player1ModeButton.selected() == "Agent" and self.player2ModeButton.selected() == "Agent"
-
-    def prompt_file(self, playerIndex):
-        top = tkinter.Tk()
-        top.withdraw()
-        filePath = tkinter.filedialog.askopenfilename(parent=top, title=f"Player {playerIndex} File", filetypes=[("Python files", "*.py")])
-        top.destroy()
-        return filePath
 
     def extractFileName(self, filePath: str):
         fileName = filePath[filePath.rfind("/")+1:].rstrip(".py")
@@ -143,22 +135,25 @@ class PlayMenuPage:
                         if before != self.player2ModeButton.selected():
                             self.show()
 
-                    elif self.player1FileOpenButton.isEnable() and self.player1FileOpenButton.collidepoint(pygame.mouse.get_pos()):
-                        self.player1FilePath = self.prompt_file(1)
-                        self.player1FileIsValid = Player.isCodeFileValid(self.player1FilePath)
-                        self.show()
-
-                    elif self.player2FileOpenButton.isEnable() and self.player2FileOpenButton.collidepoint(pygame.mouse.get_pos()):
-                        self.player2FilePath = self.prompt_file(2)
-                        self.player2FileIsValid = Player.isCodeFileValid(self.player2FilePath)
-                        self.show()
-
                     elif self.isBothAgent() and self.agentVsAgentModeButton.collidepoint(pygame.mouse.get_pos()):
                         self.agentVsAgentModeButton.reverseSelected()
                         if self.agentVsAgentModeButton.getSelected() == "Just Results":
                             self.numberOfRoundsBox.setEnable()
                         else:
                             self.numberOfRoundsBox.setDisable()
+                        self.show()
+
+                elif event.type == pygame.DROPFILE and os.path.splitext(event.file)[-1] == ".py":
+                    mousePos = pygame.mouse.get_pos()
+                    filePath = event.file.replace("\\", "/")
+                    if self.player1FileOpenButton.isEnable() and self.player1FileOpenButton.collidepoint(mousePos):
+                        self.player1FilePath = filePath
+                        self.player1FileIsValid = Player.isCodeFileValid(self.player1FilePath)
+                        self.show()
+
+                    elif self.player2FileOpenButton.isEnable() and self.player2FileOpenButton.collidepoint(mousePos):
+                        self.player2FilePath = filePath
+                        self.player2FileIsValid = Player.isCodeFileValid(self.player2FilePath)
                         self.show()
 
                 self.numberOfRoundsBox.update(event)
