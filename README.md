@@ -22,7 +22,7 @@ Special thanks to [ACM-ICPC association of Shiraz University](http://acm.shirazu
 
 or 
 
-you can install packages named in requirements.txt file manually
+you can install packages in requirements.txt manually
 
 ### Usage
 
