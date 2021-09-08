@@ -16,7 +16,7 @@ This game is developed by [Amirreza Ektesabi](https://github.com/ar-ekt/) (Game 
 
 Special thanks to [ACM-ICPC association of Shiraz University](http://acm.shirazu.ac.ir/) for holding this ceremony
 
-### Install
+### Installation
 
     pip3 install -r requirements.txt
 
