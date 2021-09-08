@@ -28,7 +28,7 @@ you can install packages in requirements.txt manually
 
 Select your mode. If you want to test your agent, you can browse your python file and select it.
 
-Note: your python code must have a function named "**main**" with 3 parameters (myCards, opponentCards, onBoardCards). Also your function should return 2 integers(a list with 2 integers) which the first one is selected-card and the second one is unselected-card(The second integer must be 0, if the agent has lower than 3 cards in its hand). If you see a X-red sign, that means your code does not meet these requirement or it has a bad logic !
+Note: your python code must have a function named "**main**" with 3 parameters (myCards, opponentCards, onBoardCards). Also your function should return 2 integers (a list with 2 integers) which the first one is selected-card and the second one is unselected-card (The second integer must be 0, if the agent has lower than 3 cards in its hand). If you see a X-red sign, that means your code does not meet these requirement or it has a bad logic !
 
 Note: If your code crashes or does a foul move, you will lose immediately ! So be careful :)
 
