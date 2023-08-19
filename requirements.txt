@@ -1,2 +1,4 @@
-pygame==2.0.1
 clipboard==0.0.4
+pygame==2.5.1
+pyperclip==1.8.2
+tk==0.1.0
